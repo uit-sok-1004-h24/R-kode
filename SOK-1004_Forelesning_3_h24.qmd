@@ -1,0 +1,110 @@
+---
+title: "SOK-1004 H24 Forelesning 3"
+subtitle: "tidyverse og ggplot2"
+author: "Even S. Hvinden"
+
+format: pdf
+
+    
+language: norsk.yml
+editor: visual
+---
+
+# 1. Innledning
+
+-   **Mål:** Bruke grunnleggende kommandoer fra dplyr og ggplot2 til å lage figurer
+
+-   **Transformere data:** Fem kommandoer i dplyr: `select()`, `filter()`, `arrange()`, `mutate()`, `summarize()`
+
+-   **Visualisere data:** Vi bruker ggplot2 i kombinasjon med dplyr
+
+-   **Gjennomføring:** Jeg introduserer kommandoene, dere prøver selv ved hjelp av vedlagt kode
+
+# 2. Koden til forelesning 3 `SOK-1004_Forelesning_3_h24.R`
+
+## 2.1 Lagre data i en tibble
+
+En tibble er det anbefalte lagringsformatet i tidyverse. Datasettet kommer i en csv fil, og tidyverse lagrer dette automatisk som tibble (tbl). Skriv `class(co2data)` for å sjekke.
+
+```{r}
+# rydd opp
+rm(list=ls())
+
+# last inn tidyverse
+# sikre at oppstart på pakken ikke vises i pdf
+suppressPackageStartupMessages(library(tidyverse))
+
+############################
+### data i tibble-format ### 
+############################
+
+
+# les CO2 data i .csv fra OWID
+url <- "https://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv"
+co2data <- read_csv(url)
+
+# se: https://github.com/owid/co2-data
+# se en beskrivelse av data her: 
+# https://github.com/owid/co2-data/blob/master/owid-co2-codebook.csv
+
+# se på dataene i konsollen
+co2data
+```
+
+## 2.2 Velg variabel med `select()`
+
+Bruk `select()` til å velge variable (kolonner) som egen tabell:
+
+```{r}
+select(co2data, iso_code)
+```
+
+## 2.3 Velg verdier med `filter()`
+
+Bruk `filter()` til å velge verdier (rader) som egen tabell:
+
+```{r}
+filter(co2data, iso_code == "AFG")
+```
+
+## 2.4 Bruk `ggplot2` til å lage figurer
+
+-   Data - aes() (koordinatsystem) - og geom (visualisering, farger, linjestørrelse) =) 
+
+-   Råd: Bruk cheat sheet og pipes
+
+```{r}
+co2data %>%
+  filter(country =="Norway") %>% 
+  ggplot(aes(x=year, y=co2)) %>%
+  + geom_line() %>%
+  + theme_minimal()
+```
+
+# 
+
+## 2.5 Gjør oppgave 1-4 i koden til forelesning 3
+
+## 2.6 Endre rekkefølge på verdier med `arrange()`
+
+Bruk `arrange()` til å endre rekkefølgen på verdier:
+
+```{r}
+arrange(co2data, co2)
+```
+
+## 2.7 Lag nye variable med `mutate()`
+
+```{r}
+mutate(co2data, x= year + 1) 
+```
+
+## 2.8 Få deskriptiv statistikk med `summarize()`
+
+Bruk `summarize()` til å få en tabell med deskriptiv statistikk, eksempelvis sum, gjennomsnitt:
+
+```{r}
+summarize(group_by(co2data, year), tot_co2 = sum(co2))
+```
+
+## 2.9 Gjør oppgave 5-8 i koden fra forelesning 3
