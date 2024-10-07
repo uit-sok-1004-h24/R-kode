@@ -104,7 +104,7 @@ df_prod <- df_prod %>%
 
 
 # Rebase the index so that 2010 = 100
-# Gir en feilmelding, men bergener likevel
+
 
 rebase_index <- function(data, base_year) {
   base_value <- data %>% filter(år == base_year) %>% pull(index)
@@ -138,7 +138,7 @@ df <- bind_rows(df_wage, df_prod_rebased) %>%
 unique_names <- unique(df$statistikkvariabel)
 
 df <- df %>%
-  mutate(statistikkvariabel = ifelse(statistikkvariabel == unique_names[1], "Reallønn", "Bruttoprodukt per timeverk"))
+  mutate(statistikkvariabel = ifelse(statistikkvariabel == unique_names[1], "Bruttoprodukt per timeverk", "Reallønn"))
 
 
 
